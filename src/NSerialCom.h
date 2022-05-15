@@ -38,6 +38,7 @@ struct NSerialData
     NSerialData(uint16_t, String);
     NSerialData(uint16_t, uint32_t);
     NSerialData(uint16_t, char *);
+    ~NSerialData();
     void get(uint32_t &);
     void get(String &);
 };

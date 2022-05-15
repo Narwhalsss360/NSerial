@@ -26,6 +26,11 @@ NSerialData::NSerialData(uint16_t addr, char *str)
 {
 }
 
+NSerialData::~NSerialData()
+{
+    free(data);
+}
+
 void NSerialData::get(uint32_t &out)
 {
     out = reinterpret_c_style(uint32_t, data);
