@@ -75,17 +75,13 @@ void NSerialCom::storeData(NSD newData)
 void NSerialCom::serialEvent()
 {
     uint8_t count = ZERO;
-    bool end = false;
 
     while (Serial.available())
     {
-        if (count < IN_STREAM_BUFFER_LENGTH || !end)
+        if (count < IN_STREAM_BUFFER_LENGTH)
             inStreamBuffer[count] = (char)Serial.read();
         else
             Serial.read();
-        if (inStreamBuffer[count] == EOT)
-            end = true;
-        count++;
     }
 
     if (inStreamBuffer[ZERO] == SOH)
@@ -131,7 +127,6 @@ void NSerialCom::send(rNSD newData)
         sendBuffer[STREAM_BUFFER_DATA_INDEX_START + i] = newData.data[i];
     }
 
-    sendBuffer[bufferLength - 1] = EOT;
     Serial.print((const char*)sendBuffer);
 }
 
