@@ -41,12 +41,12 @@ void NSerialData::get(String &out)
     out = (char *)data;
 }
 
-NSerialComClass::NSerialComClass()
+NSerialCom::NSerialCom()
     :data({ NSerialData() })
 {
 }
 
-uint8_t NSerialComClass::search(uint16_t addr)
+uint8_t NSerialCom::search(uint16_t addr)
 {
     for (uint8_t i = ZERO; i < NSD_LENGTH; i++)
     {
@@ -56,7 +56,7 @@ uint8_t NSerialComClass::search(uint16_t addr)
     return NSD_LENGTH;
 }
 
-void NSerialComClass::storeData(NSD newData)
+void NSerialCom::storeData(NSD newData)
 {
     uint8_t index = search(newData.address);
     if (index < NSD_LENGTH)
@@ -72,7 +72,7 @@ void NSerialComClass::storeData(NSD newData)
     }
 }
 
-void NSerialComClass::serialEvent()
+void NSerialCom::serialEvent()
 {
     uint8_t count = ZERO;
     bool end = false;
@@ -105,7 +105,7 @@ void NSerialComClass::serialEvent()
     memset(inStreamBuffer, NULL, IN_STREAM_BUFFER_LENGTH);
 }
 
-NSD NSerialComClass::get(uint16_t addr)
+NSD NSerialCom::get(uint16_t addr)
 {
     uint8_t index = search(addr);
     if (index < NSD_LENGTH)
@@ -113,7 +113,7 @@ NSD NSerialComClass::get(uint16_t addr)
     return NSD();
 }
 
-void NSerialComClass::send(NSD &newData)
+void NSerialCom::send(rNSD newData)
 {
     if (!newData.length)
         return;
@@ -135,7 +135,7 @@ void NSerialComClass::send(NSD &newData)
     Serial.print((const char*)sendBuffer);
 }
 
-NSerialComClass NSerial = NSerialComClass();
+NSerialCom NSerial = NSerialCom();
 
 extern void serialEvent()
 {

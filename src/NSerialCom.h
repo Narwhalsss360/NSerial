@@ -47,7 +47,7 @@ typedef NSerialData NSD;
 typedef NSD *pNSD;
 typedef NSD &rNSD;
 
-class NSerialComClass
+class NSerialCom
 {
 private:
     NSD data[NSD_LENGTH];
@@ -57,13 +57,13 @@ private:
     void storeData(NSD);
     uint8_t inStreamBuffer[IN_STREAM_BUFFER_LENGTH] = { ZERO };
 public:
-    NSerialComClass();
+    NSerialCom();
     void serialEvent();
     NSD get(uint16_t);
-    void send(NSD &);
+    void send(rNSD);
     void (*onReceive)(NSD, const char*);
 };
 
 extern void serialEvent();
-extern NSerialComClass NSerial;
+extern NSerialCom NSerial;
 #endif
