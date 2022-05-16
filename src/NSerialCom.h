@@ -1,5 +1,5 @@
-#ifndef NSerialCom
-#define NSerialCom
+#ifndef NSerialCom_h
+#define NSerialCom_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"
