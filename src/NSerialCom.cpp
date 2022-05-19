@@ -6,9 +6,19 @@ NSerialData::NSerialData()
 }
 
 NSerialData::NSerialData(uint16_t addr, void *pData, uint8_t len)
-    : address(addr), data((uint8_t *)malloc(length)), length(len)
+    :address(addr), length(len), data(nullptr)
 {
-    memcpy(data, pData, length);
+    Serial.println("\nAllocating data...");
+    data = (uint8_t*)malloc(len);
+    Serial.println("Allocated data.");
+    if (data == nullptr)
+    {
+        length = 0;
+        return;
+    }
+    memmove(data, pData, len);
+    Serial.println("Moved data");
+    return;
 }
 
 NSerialData::NSerialData(uint16_t addr, String str)
@@ -28,12 +38,13 @@ NSerialData::NSerialData(uint16_t addr, char *str)
 
 NSerialData::~NSerialData()
 {
-    free(data);
+    Serial.println("Destructor called");
+    free(this);
 }
 
 void NSerialData::get(uint32_t &out)
 {
-    out = reinterpret_c_style(uint32_t, data);
+    out = x2i(data, length);
 }
 
 void NSerialData::get(String &out)
@@ -42,8 +53,16 @@ void NSerialData::get(String &out)
 }
 
 NSerialCom::NSerialCom()
-    :data({ NSerialData() })
+    :data({ NSerialData() }), inStreamBuffer({ ZERO }), newData(NULL)
 {
+}
+
+void NSerialCom::clearBuffer()
+{
+    for (uint8_t i = ZERO; i < IN_STREAM_BUFFER_LENGTH; i++)
+    {
+        inStreamBuffer[i] = ZERO;
+    }
 }
 
 uint8_t NSerialCom::search(uint16_t addr)
@@ -74,31 +93,37 @@ void NSerialCom::storeData(NSD newData)
 
 void NSerialCom::serialEvent()
 {
+    clearBuffer();
     uint8_t count = ZERO;
 
     while (Serial.available())
     {
-        if (count < IN_STREAM_BUFFER_LENGTH)
-            inStreamBuffer[count] = (char)Serial.read();
-        else
-            Serial.read();
+        inStreamBuffer[count] = (char)Serial.read();
+        count++;
+        delayMicroseconds(STREAM_WAIT_TIME);
     }
 
-    if (inStreamBuffer[ZERO] == SOH)
+    if (inStreamBuffer[ZERO] == SOH && count >= STREAM_MIN_BUFFER_SIZE)
     {
-        if ((reinterpret_c_style(uint16_t, &inStreamBuffer[STREAM_BUFFER_ADDRESS_INDEX_START]) + STREAM_MIN_BUFFER_SIZE) != strlen((const char*)inStreamBuffer))
-            onReceive(NSD(), (const char*)inStreamBuffer);
-            return;
+        char* sizeHex = inStreamBuffer + STREAM_BUFFER_SIZE_INDEX_START;
+        char* addressHex = inStreamBuffer + STREAM_BUFFER_ADDRESS_INDEX_START;
+        
+        uint16_t address = x2i(addressHex, STREAM_BUFFER_ADDRESS_INDEX_LENGTH);
+        uint8_t size = x2i(sizeHex, STREAM_BUFFER_SIZE_INDEX_LENGTH);
+        
+        if (newData != NULL)
+            newData->~NSerialData();
 
-        storeData({inStreamBuffer[STREAM_BUFFER_SIZE_INDEX_START], &inStreamBuffer[STREAM_BUFFER_DATA_INDEX_START], reinterpret_c_style(uint16_t, &inStreamBuffer[STREAM_BUFFER_ADDRESS_INDEX_START])});
-        if (onReceive != NULL)
-            onReceive({inStreamBuffer[STREAM_BUFFER_SIZE_INDEX_START], &inStreamBuffer[STREAM_BUFFER_DATA_INDEX_START], reinterpret_c_style(uint16_t, &inStreamBuffer[STREAM_BUFFER_ADDRESS_INDEX_START])}, (const char*)inStreamBuffer);
+        Serial.println("Allocating struct...");
+        newData = new NSD(address, &inStreamBuffer[STREAM_BUFFER_DATA_INDEX_START], size * 2);
+        Serial.println("Allocated struct.");
+
+        
+        //storeData(newData);
+        //onReceive(newData, inStreamBuffer);
+        
     }
-    else
-    {
-        onReceive(NSD(), (const char*)inStreamBuffer);
-    }
-    memset(inStreamBuffer, NULL, IN_STREAM_BUFFER_LENGTH);
+    clearBuffer();
 }
 
 NSD NSerialCom::get(uint16_t addr)
