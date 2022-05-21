@@ -30,6 +30,7 @@
 #define STREAM_BUFFER_ADDRESS_INDEX_START 3
 #define STREAM_BUFFER_ADDRESS_INDEX_LENGTH 4
 #define STREAM_BUFFER_DATA_INDEX_START 7
+#define STREAM_BUFFER_DATA_UINT32_LENGTH 8
 #define STREAM_WAIT_TIME 3
 
 #define INVALID_NSD(nsd) (nsd.length == ZERO) ? true : false
@@ -39,6 +40,7 @@ struct NSerialData
     uint16_t address;
     uint8_t length;
     uint8_t* data;
+    bool str;
     NSerialData();
     NSerialData(uint16_t, void *, uint8_t);
     NSerialData(uint16_t, String);
@@ -61,14 +63,15 @@ private:
     pNSD newData;
     uint8_t search(uint16_t);
     void storeData(NSD);
-    uint8_t inStreamBuffer[IN_STREAM_BUFFER_LENGTH];
+    uint8_t streamBuffer[IN_STREAM_BUFFER_LENGTH];
     void clearBuffer();
+    void n2sl(char[], uint32_t, uint8_t);
 public:
     NSerialCom();
     void serialEvent();
     NSD get(uint16_t);
     void send(rNSD);
-    void (*onReceive)(NSD, uint8_t*);
+    void (*onReceive)(rNSD, uint8_t*);
 };
 
 extern void serialEvent();
