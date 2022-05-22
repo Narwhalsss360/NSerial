@@ -19,10 +19,6 @@
     <Text Include="$(MSBuildThisFileDirectory)src\NSerialCom.h" />
   </ItemGroup>
   <ItemGroup>
-    <!-- <ClInclude Include="$(MSBuildThisFileDirectory)NSerialCom.h" /> -->
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\NDefs\src\NDefs.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)src\NSerialCom.cpp" />
   </ItemGroup>
 </Project>
