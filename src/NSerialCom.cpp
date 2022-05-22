@@ -7,7 +7,7 @@ NSerialData::NSerialData()
 }
 
 NSerialData::NSerialData(uint16_t addr, void *pData, uint8_t len)
-    :address(addr), length(len), data(nullptr), str(false);
+    :address(addr), length(len), data(nullptr), str(false)
 {
     data = (uint8_t*)malloc(len);
     if (data == nullptr)
