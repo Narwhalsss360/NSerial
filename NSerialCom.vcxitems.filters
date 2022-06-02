@@ -9,6 +9,9 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx</Extensions>
     </Filter>
+    <Filter Include="Library metdata">
+      <UniqueIdentifier>{51ffaa56-6779-4879-8443-4778b8bcc813}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)src\NSerialCom.cpp">
@@ -16,10 +19,14 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="$(MSBuildThisFileDirectory)library.properties" />
     <Text Include="$(MSBuildThisFileDirectory)src\NSerialCom.h">
       <Filter>Header Files</Filter>
     </Text>
-    <Text Include="$(MSBuildThisFileDirectory)keyword.txt" />
+    <Text Include="$(MSBuildThisFileDirectory)keyword.txt">
+      <Filter>Library metdata</Filter>
+    </Text>
+    <Text Include="$(MSBuildThisFileDirectory)library.properties">
+      <Filter>Library metdata</Filter>
+    </Text>
   </ItemGroup>
 </Project>
