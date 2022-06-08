@@ -1,62 +1,5 @@
 #include "NSerialCom.h"
 
-#pragma region NSerialData
-NSerialData::NSerialData()
-    : address(NULL), data(NULL), length(NULL), str(false)
-{
-}
-
-NSerialData::NSerialData(uint16_t addr, void *pData, uint8_t len)
-    :address(addr), length(len), data(nullptr), str(false)
-{
-    data = (uint8_t*)malloc(len);
-    if (data == nullptr)
-    {
-        length = 0;
-        return;
-    }
-    memmove(data, pData, len);
-    return;
-}
-
-NSerialData::NSerialData(uint16_t addr, String str)
-    : NSerialData(addr, (void *)str.c_str(), str.length() + 1)
-{
-    str = true;
-}
-
-NSerialData::NSerialData(uint16_t addr, uint32_t num)
-    : NSerialData(addr, (void *)&num, sizeof(num))
-{
-    str = false;
-}
-
-NSerialData::NSerialData(uint16_t addr, char *cstr)
-    : NSerialData(addr, (void *)str, strlen(cstr) + 1)
-{
-    str = true;
-}
-
-NSerialData::~NSerialData()
-{
-    free(data);
-    free(this);
-}
-
-void NSerialData::get(uint32_t &out)
-{
-    if (!str)
-        out = x2i(data, length);
-}
-
-void NSerialData::get(String &out)
-{
-    if (str)
-        out = (char *)data;
-}
-#pragma endregion
-
-#pragma region NSerialCom
 NSerialCom::NSerialCom()
     :data({ NSerialData() }), streamBuffer({ ZERO }), newData(NULL)
 {
@@ -64,10 +7,7 @@ NSerialCom::NSerialCom()
 
 void NSerialCom::clearBuffer()
 {
-    for (uint8_t i = ZERO; i < IN_STREAM_BUFFER_LENGTH; i++)
-    {
-        streamBuffer[i] = ZERO;
-    }
+    for (uint8_t i = ZERO; i < IN_STREAM_BUFFER_LENGTH; i++) { streamBuffer[i] = ZERO; }
 }
 
 void NSerialCom::n2sl(char buf[], uint32_t num,uint8_t length)
@@ -128,7 +68,7 @@ void NSerialCom::serialEvent()
 
         uint16_t address = x2i(addressHex, STREAM_BUFFER_ADDRESS_INDEX_LENGTH);
         uint8_t size = x2i(sizeHex, STREAM_BUFFER_SIZE_INDEX_LENGTH);
-        
+
         if (newData != NULL)
             newData->~NSerialData();
 
@@ -151,7 +91,7 @@ NSD NSerialCom::get(uint16_t addr)
 void NSerialCom::send(rNSD newData)
 {
     clearBuffer();
-    if (!newData.length)
+    if (INVALID_NSD(newData))
         return;
     const uint8_t dataLength = newData.length;
 
@@ -175,13 +115,10 @@ void NSerialCom::send(rNSD newData)
     }
     Serial.print(sendBuffer);
 }
-#pragma endregion NSerialCom
 
-#pragma region NSerialEvents
 NSerialCom NSerial = NSerialCom();
 
 extern void serialEvent()
 {
     NSerial.serialEvent();
 }
-#pragma endregion

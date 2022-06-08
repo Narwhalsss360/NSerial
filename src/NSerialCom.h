@@ -9,6 +9,7 @@
 
 #include <NDefs.h>
 #include <NFuncs.h>
+#include "NSerialData.h"
 
 #if !(NFUNCS_MAJOR_VERSION >= 1 && NFUNCS_MINOR_VERSION >= 1)
 #error "Update NDefs library to atleast 1.1.0."
@@ -32,28 +33,6 @@
 #define STREAM_BUFFER_DATA_INDEX_START 7
 #define STREAM_BUFFER_DATA_UINT32_LENGTH 8
 #define STREAM_WAIT_TIME 3
-
-#define INVALID_NSD(nsd) (nsd.length == ZERO) ? true : false
-
-struct NSerialData
-{
-    uint16_t address;
-    uint8_t length;
-    uint8_t* data;
-    bool str;
-    NSerialData();
-    NSerialData(uint16_t, void *, uint8_t);
-    NSerialData(uint16_t, String);
-    NSerialData(uint16_t, uint32_t);
-    NSerialData(uint16_t, char *);
-    ~NSerialData();
-    void get(uint32_t &);
-    void get(String &);
-};
-
-typedef NSerialData NSD;
-typedef NSD *pNSD;
-typedef NSD &rNSD;
 
 class NSerialCom
 {
