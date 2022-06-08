@@ -1,1 +1,6 @@
-start byte, addrHex, dataString, end byte
+Start byte,Type byte,Address(Hex),Data(Hex/String), End byte,Name
+SOH(0x01),0xFF,FFFF,FFFF/Str,NULL(0x00),
+Index 0,Index 1,Index 2,Index 6,Index 0,
+SOH,0x05,1,11DE784A,NULL,Speed of light
+SOH,0x08,00FF,354655307,NULL,Pi (I think)
+SOH,0x09,010F,Name!,NULL,Name string

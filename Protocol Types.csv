@@ -1,0 +1,10 @@
+Typename	Size(bytes)	Protocol bytecode
+uint8_t	1	0x01
+int8_t	1	0x02
+uint16_t	2	0x03
+int16_t	2	0x04
+uint32_t	4	0x05
+int32_t	4	0x06
+float_t	4	0x07
+double_t	8	0x08
+String	~	0x09
