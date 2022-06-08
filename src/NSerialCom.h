@@ -12,7 +12,7 @@
 #include "NSerialData.h"
 
 #if !(NFUNCS_MAJOR_VERSION >= 1 && NFUNCS_MINOR_VERSION >= 1)
-#error "Update NDefs library to atleast 1.1.0."
+    #error "Update NDefs library to atleast 1.1.0."
 #endif
 
 #ifndef NSD_LENGTH
@@ -30,13 +30,7 @@
 #define STREAM_BUFFER_ADDRESS_LENGTH 4
 #define STREAM_BUFFER_DATA_INDEX 6
 
-#define STREAM_MIN_BUFFER_SIZE 9
-#define STREAM_BUFFER_SIZE_INDEX_START 1
-#define STREAM_BUFFER_SIZE_INDEX_LENGTH 2
-#define STREAM_BUFFER_ADDRESS_INDEX_START 3
-#define STREAM_BUFFER_ADDRESS_INDEX_LENGTH 4
-#define STREAM_BUFFER_DATA_INDEX_START 7
-#define STREAM_BUFFER_DATA_UINT32_LENGTH 8
+#define STREAM_MIN_BUFFER_SIZE 8
 #define STREAM_WAIT_TIME 3
 
 class NSerialCom

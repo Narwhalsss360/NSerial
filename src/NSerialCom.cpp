@@ -63,16 +63,16 @@ void NSerialCom::serialEvent()
 
     if (streamBuffer[ZERO] == SOH && count >= STREAM_MIN_BUFFER_SIZE)
     {
-        char* sizeHex = streamBuffer + STREAM_BUFFER_SIZE_INDEX_START;
-        char* addressHex = streamBuffer + STREAM_BUFFER_ADDRESS_INDEX_START;
-
-        uint16_t address = x2i(addressHex, STREAM_BUFFER_ADDRESS_INDEX_LENGTH);
-        uint8_t size = x2i(sizeHex, STREAM_BUFFER_SIZE_INDEX_LENGTH);
+        streamBuffer[count + 1] = NULLTERMINATOR;
+        
+        uint8_t type = x2i((streamBuffer + STREAM_BUFFER_TYPE_INDEX), 1);
+        uint16_t address = x2i((streamBuffer + STREAM_BUFFER_ADDRESS_INDEX), STREAM_BUFFER_ADDRESS_INDEX_LENGTH);
+        uint8_t size = strlen(streamBuffer) - STREAM_MIN_BUFFER_SIZE - 1;
 
         if (newData != NULL)
             newData->~NSerialData();
 
-        newData = new NSerialData(address, (void *)&streamBuffer[STREAM_BUFFER_DATA_INDEX_START], size * 2);
+        newData = new NSerialData(type, address, (streamBuffer + STREAM_BUFFER_DATA_INDEX), size);
         Serial.println((uint16_t)newData);
 
         //storeData(newData);
