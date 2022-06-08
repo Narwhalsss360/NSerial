@@ -22,7 +22,6 @@
             case NSD_INT16:
                 break;
             case NSD_UINT32:
-                to = 
                 break;
             case NSD_INT32:
                 break;
@@ -31,6 +30,7 @@
             case NSD_DOUBLE:
                 break;
             case NSD_STRING:
+                to = (String)nsd.data;
                 break;
             default:
                 break;
