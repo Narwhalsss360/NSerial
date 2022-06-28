@@ -10,31 +10,6 @@
 #include <NDefs.h>
 
 #define INVALID_NSD(nsd) (nsd.length == ZERO || nsd.data == NULL) ? true : false
-#define getData(nsd, to) \
-            switch (nsd.type)
-            {
-            case NSD_UINT8:
-                break;
-            case NSD_INT8:
-                break;
-            case NSD_UINT16:
-                break;
-            case NSD_INT16:
-                break;
-            case NSD_UINT32:
-                break;
-            case NSD_INT32:
-                break;
-            case NSD_FLOAT:
-                break;
-            case NSD_DOUBLE:
-                break;
-            case NSD_STRING:
-                to = (String)nsd.data;
-                break;
-            default:
-                break;
-            }
 
 enum NSDTYPES
 {
